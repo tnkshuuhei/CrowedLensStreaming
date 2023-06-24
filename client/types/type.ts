@@ -13,3 +13,13 @@ export interface ButtonProps {
   handleClick: () => void;
   styles: string;
 }
+
+export interface FieldProps {
+  labelName: string;
+  placeholder: string;
+  inputType: any;
+  isTextArea: boolean;
+  value: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTextChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
