@@ -23,3 +23,14 @@ export interface FieldProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleTextChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
+
+export interface CampaignProps {
+  owner: any;
+  title: any;
+  description: any;
+  target: any;
+  deadline: any;
+  amountCollected: any;
+  image: any;
+  handleClick: () => void;
+}

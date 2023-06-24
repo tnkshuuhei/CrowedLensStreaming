@@ -42,7 +42,7 @@ const Navbar = () => {
           }}
         />
 
-        <Link href="/profile">
+        <Link href="/Profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <Image
               src={thirdweb}

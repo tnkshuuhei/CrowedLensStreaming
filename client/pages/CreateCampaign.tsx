@@ -20,6 +20,7 @@ function CreateCampaign() {
     deadline: "",
     image: "",
   });
+
   const { createCampaign } = useStateContext();
 
   const handleFormFieldChange = (

@@ -66,6 +66,15 @@ export const StateContextProvider = ({ children }: any) => {
       console.log("contract call failure", error);
     }
   };
+  const getUserCampaigns = async () => {
+    const allCampaigns = await getCampaigns();
+
+    const filteredCampaigns = allCampaigns.filter(
+      (campaign: any) => campaign.owner === address
+    );
+
+    return filteredCampaigns;
+  };
 
   return (
     <StateContext.Provider
@@ -74,6 +83,7 @@ export const StateContextProvider = ({ children }: any) => {
         connect,
         contract,
         getCampaigns,
+        getUserCampaigns,
         createCampaign: publishCampaign,
       }}
     >
