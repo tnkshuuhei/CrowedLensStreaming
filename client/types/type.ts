@@ -8,7 +8,7 @@ export interface IconProps {
 }
 
 export interface ButtonProps {
-  btnType: undefined | "button";
+  btnType: any;
   title: string;
   handleClick: () => void;
   styles: string;

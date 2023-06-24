@@ -1,9 +1,10 @@
 import React from "react";
 import { useRouter } from "next/router";
-// import { ethers } from "ethers";
+import { ethers } from "ethers";
 import { money } from "../assets";
 import CustomButton from "../components/CustomButton";
 import { checkIfImage } from "../utils";
+import { useStateContext } from "../context";
 import FormField from "../components/FormField";
 import Image from "next/image";
 import Loader from "../components/Loader";
@@ -19,8 +20,7 @@ function CreateCampaign() {
     deadline: "",
     image: "",
   });
-
-  const createCampaign = async (campaign: any) => {};
+  const { createCampaign } = useStateContext();
 
   const handleFormFieldChange = (
     fieldName: string,
@@ -29,19 +29,19 @@ function CreateCampaign() {
     setForm({ ...form, [fieldName]: e.target.value });
     console.log(e.target.value);
   };
+  console.log("Form:", form);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
     checkIfImage(form.image, async (exists: any) => {
       if (exists) {
         setIsLoading(true);
-        // await createCampaign({
-        //   ...form,
-        //   target: ethers.utils.parseUnits(form.target, 18),
-        // });
-        // setIsLoading(false);
-        // router.push("/");
+        await createCampaign({
+          ...form,
+          target: ethers.utils.parseUnits(form.target, 18),
+        });
+        setIsLoading(false);
+        router.push("/");
       } else {
         alert("Provide valid image URL");
         setForm({ ...form, image: "" });
@@ -161,10 +161,12 @@ function CreateCampaign() {
 
           <div className="flex justify-center items-center mt-[40px]">
             <CustomButton
-              btnType="button"
+              btnType="submit"
               title="Submit new campaign"
               styles="bg-[#1dc071]"
-              handleClick={() => {}}
+              handleClick={() => {
+                handleSubmit;
+              }}
             />
           </div>
         </form>

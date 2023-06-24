@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-// import { useStateContext } from "../context";
 import CustomButton from "./CustomButton";
 import { logo, menu, search, thirdweb } from "../assets";
 import { navlinks } from "../constants";
 import { useRouter } from "next/router";
+import { useStateContext } from "../context";
 
 const Navbar = () => {
   const router = useRouter();
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  // const { connect, address } = useStateContext();
-  const address: string = "0x1234567890123456789012345678901234567890";
-  const connect = () => {};
+  const { connect, address } = useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -36,7 +34,7 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={address ? "Create a campaign" : "Connect"}
+          title={address ? address : "Connect"}
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
             if (address) router.push("/CreateCampaign");
