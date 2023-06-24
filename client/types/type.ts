@@ -6,3 +6,10 @@ export interface IconProps {
   disabled: boolean | undefined;
   handleClick: () => void;
 }
+
+export interface ButtonProps {
+  btnType: undefined | "button";
+  title: string;
+  handleClick: () => void;
+  styles: string;
+}

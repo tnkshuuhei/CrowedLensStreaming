@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { logo, sun } from "../assets";
 import { navlinks } from "../constants";
-import { IconProps } from "../types";
+import { IconProps } from "../types/type";
+import { useRouter } from "next/router";
 const Icon = ({
   styles,
   name,
@@ -33,7 +34,7 @@ const Icon = ({
 );
 function Sidebar() {
   const [isActive, setIsActive] = useState("dashboard");
-
+  const router = useRouter();
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
       <Link href="/">
@@ -49,7 +50,7 @@ function Sidebar() {
 
       <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
         <div className="flex flex-col justify-center items-center gap-3">
-          {navlinks.map(({ name, imgUrl, disabled }) => (
+          {navlinks.map(({ name, link, imgUrl, disabled }) => (
             <Icon
               key={name}
               styles=""
@@ -60,7 +61,7 @@ function Sidebar() {
               handleClick={() => {
                 if (!disabled) {
                   setIsActive(name);
-                  // navigate(link);
+                  router.push(link);
                 }
               }}
             />
