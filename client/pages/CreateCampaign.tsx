@@ -29,7 +29,6 @@ function CreateCampaign() {
     setForm({ ...form, [fieldName]: e.target.value });
     console.log(e.target.value);
   };
-  console.log("Form:", form);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();

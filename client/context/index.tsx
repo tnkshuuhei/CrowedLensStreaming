@@ -1,4 +1,5 @@
-import React, { useContext, createContext } from "react";
+import React, { useContext, createContext, useEffect } from "react";
+import { ethers } from "ethers";
 import {
   useAddress,
   useContract,
@@ -43,12 +44,36 @@ export const StateContextProvider = ({ children }: any) => {
     }
   };
 
+  const getCampaigns = async () => {
+    try {
+      const data = await contract?.call("getCampaigns");
+      console.log("data", data);
+      const parsedCapmaigns = data.map((campaign: any, i: number) => ({
+        owner: campaign.owner,
+        title: campaign.title,
+        description: campaign.description,
+        target: ethers.utils.formatEther(campaign.target),
+        deadline: campaign.deadline.toNumber(),
+        amountCollected: ethers.utils.formatEther(
+          campaign.amountCollected.toNumber()
+        ),
+        image: campaign.image,
+        pId: i,
+      }));
+      console.log("parsedCapmaigns", parsedCapmaigns);
+      return parsedCapmaigns;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
   return (
     <StateContext.Provider
       value={{
         address,
         connect,
         contract,
+        getCampaigns,
         createCampaign: publishCampaign,
       }}
     >
