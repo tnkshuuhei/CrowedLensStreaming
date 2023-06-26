@@ -149,13 +149,13 @@ const CreateCampaign: NextPage = () => {
             labelName="Campaign image *"
             placeholder="Place image URL of your campaign"
             inputType="url"
-            isTextArea={true}
+            isTextArea={false}
             value={form.image}
             handleChange={(e: { target: { value: any } }) =>
-              console.log("This is disabled")
+              handleFormFieldChange("image", e)
             }
             handleTextChange={(e: { target: { value: any } }) =>
-              handleFormFieldChange("image", e)
+              console.log("This is disabled")
             }
           />
 

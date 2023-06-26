@@ -68,12 +68,39 @@ export const StateContextProvider = ({ children }: any) => {
   };
   const getUserCampaigns = async () => {
     const allCampaigns = await getCampaigns();
-
     const filteredCampaigns = allCampaigns.filter(
       (campaign: any) => campaign.owner === address
     );
-
     return filteredCampaigns;
+  };
+
+  const donate = async (pId: any, amount: any) => {
+    try {
+      const data = await contract?.call("donateToCampaign", pId, {
+        value: ethers.utils.parseEther(amount),
+      });
+      console.log("data", data);
+      return data;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+  const getDonations = async (pId: any) => {
+    try {
+      const data = await contract?.call("getDonations", pId);
+
+      const numberofDonations = data[0].length;
+      const parsedDonations = [];
+      for (let i = 0; i < numberofDonations; i++) {
+        parsedDonations.push({
+          donor: data[0][i],
+          amount: ethers.utils.formatEther(data[1][i].toString()),
+        });
+      }
+      return parsedDonations;
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
   };
 
   return (
@@ -82,6 +109,8 @@ export const StateContextProvider = ({ children }: any) => {
         address,
         connect,
         contract,
+        donate,
+        getDonations,
         getCampaigns,
         getUserCampaigns,
         createCampaign: publishCampaign,

@@ -6,9 +6,10 @@ import { loader } from "../assets";
 
 const DisplayCampaigns = ({ title, isLoading, campaigns }: any) => {
   const router = useRouter();
-  const name = router.query.name;
+  const name = router.query.campaign;
+  console.log("name", router);
   const handleRoute = (campaign: any) => {
-    router.push(`/CampaignDetails/${campaign.title}`);
+    router.push(campaign.title);
   };
 
   return (
