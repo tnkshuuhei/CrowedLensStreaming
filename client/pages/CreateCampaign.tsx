@@ -2,14 +2,14 @@ import React from "react";
 import { useRouter } from "next/router";
 import { ethers } from "ethers";
 import { money } from "../assets";
-import CustomButton from "../components/CustomButton";
 import { checkIfImage } from "../utils";
 import { useStateContext } from "../context";
 import FormField from "../components/FormField";
 import Image from "next/image";
-import Loader from "../components/Loader";
-import Layout from "../components/Layout";
-function CreateCampaign() {
+import { CustomButton, Layout, Loader } from "../components";
+import { NextPage } from "next";
+
+const CreateCampaign: NextPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
   const [form, setForm] = React.useState({
@@ -173,6 +173,6 @@ function CreateCampaign() {
       </div>
     </Layout>
   );
-}
+};
 
 export default CreateCampaign;

@@ -1,6 +1,8 @@
-import React from "react";
-import { Layout } from "../components";
 import { NextPage } from "next";
+
+import React from "react";
+
+import { Layout } from "../components";
 
 const CampaignDetails: NextPage = () => {
   return (

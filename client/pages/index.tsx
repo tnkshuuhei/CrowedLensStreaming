@@ -1,9 +1,7 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
 import type { NextPage } from "next";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import { Navbar, Sidebar } from "../components";
 
-const Home: NextPage = () => {
+const Page: NextPage = () => {
   return (
     <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row">
       <div className="sm:flex hidden mr-10 relative">
@@ -16,4 +14,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Page;

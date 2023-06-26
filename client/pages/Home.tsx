@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context";
-import Layout from "../components/Layout";
-import DisplayCampaigns from "../components/DisplayCampaigns";
-function Home() {
+import { Layout, DisplayCampaigns } from "../components";
+import { NextPage } from "next";
+
+const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   const { address, contract, getCampaigns } = useStateContext();
@@ -30,6 +31,6 @@ function Home() {
       />
     </Layout>
   );
-}
+};
 
 export default Home;
