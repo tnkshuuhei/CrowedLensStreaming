@@ -34,7 +34,11 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={address ? address : "Connect"}
+          title={
+            address
+              ? address.slice(0, 6) + "..." + address.slice(-4)
+              : "Connect"
+          }
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
             if (address) router.push("/CreateCampaign");
@@ -109,7 +113,11 @@ const Navbar = () => {
           <div className="flex mx-4">
             <CustomButton
               btnType="button"
-              title={address ? "Create a campaign" : "Connect"}
+              title={
+                address
+                  ? address.slice(0, 6) + "..." + address.slice(-4)
+                  : "Connect"
+              }
               styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
               handleClick={() => {
                 if (address) router.push("/CreateCampaign");

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context";
 import { Layout, DisplayCampaigns } from "../components";
@@ -24,11 +25,17 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      <DisplayCampaigns
-        title="All Campaigns"
-        isLoading={isLoading}
-        campaigns={campaigns}
-      />
+      {campaigns && campaigns.length > 0 ? (
+        <DisplayCampaigns
+          title="All Campaigns"
+          isLoading={isLoading}
+          campaigns={campaigns}
+        />
+      ) : (
+        <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
+          No campaigns to display
+        </p>
+      )}
     </Layout>
   );
 };

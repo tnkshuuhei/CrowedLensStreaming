@@ -20,7 +20,6 @@ export const StateContextProvider = ({ children }: any) => {
 
   const address: string | undefined = useAddress();
   const connect: any = useMetamask();
-
   const publishCampaign = async (form: any) => {
     try {
       if (!address) {
@@ -43,27 +42,25 @@ export const StateContextProvider = ({ children }: any) => {
       console.log("contract call failure", error);
     }
   };
-
   const getCampaigns = async () => {
-    try {
-      const data = await contract?.call("getCampaigns");
-      console.log("data", data);
-      const parsedCapmaigns = data.map((campaign: any, i: number) => ({
+    if (contract) {
+      const campaigns = await contract.call("getCampaigns");
+      const parsedCampaings = campaigns.map((campaign: any, i: number) => ({
         owner: campaign.owner,
         title: campaign.title,
         description: campaign.description,
-        target: ethers.utils.formatEther(campaign.target),
+        target: ethers.utils.formatEther(campaign.target.toString()),
         deadline: campaign.deadline.toNumber(),
         amountCollected: ethers.utils.formatEther(
-          campaign.amountCollected.toNumber()
+          campaign.amountCollected.toString()
         ),
         image: campaign.image,
         pId: i,
       }));
-      console.log("parsedCapmaigns", parsedCapmaigns);
-      return parsedCapmaigns;
-    } catch (error) {
-      console.log("contract call failure", error);
+
+      return parsedCampaings;
+    } else {
+      console.log("contract is not defined");
     }
   };
   const getUserCampaigns = async () => {
@@ -86,21 +83,19 @@ export const StateContextProvider = ({ children }: any) => {
     }
   };
   const getDonations = async (pId: any) => {
-    try {
-      const data = await contract?.call("getDonations", pId);
+    const donations = await contract?.call("getDonators", pId);
+    const numberOfDonations = donations[0].length;
 
-      const numberofDonations = data[0].length;
-      const parsedDonations = [];
-      for (let i = 0; i < numberofDonations; i++) {
-        parsedDonations.push({
-          donor: data[0][i],
-          amount: ethers.utils.formatEther(data[1][i].toString()),
-        });
-      }
-      return parsedDonations;
-    } catch (error) {
-      console.log("contract call failure", error);
+    const parsedDonations = [];
+
+    for (let i = 0; i < numberOfDonations; i++) {
+      parsedDonations.push({
+        donator: donations[0][i],
+        donation: ethers.utils.formatEther(donations[1][i].toString()),
+      });
     }
+
+    return parsedDonations;
   };
 
   return (
