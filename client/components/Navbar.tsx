@@ -11,12 +11,13 @@ const Navbar = () => {
   const router = useRouter();
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  const { connect, address } = useStateContext();
+  const { connectWallet, connect, address } = useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
-      <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
-        <input
+      <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pr-2 h-[52px] ">
+        <h1 className="text-white text-3xl">Lens Crowed Streaming</h1>
+        {/* <input
           type="text"
           placeholder="Search for campaigns"
           className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
@@ -28,7 +29,7 @@ const Navbar = () => {
             alt="search"
             className="w-[15px] h-[15px] object-contain"
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="sm:flex hidden flex-row justify-end gap-4">
@@ -42,7 +43,7 @@ const Navbar = () => {
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
             if (address) router.push("/CreateCampaign");
-            else connect();
+            else connectWallet();
           }}
         />
 
@@ -121,7 +122,7 @@ const Navbar = () => {
               styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
               handleClick={() => {
                 if (address) router.push("/CreateCampaign");
-                else connect();
+                else connectWallet();
               }}
             />
           </div>

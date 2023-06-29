@@ -13,7 +13,8 @@ import { NextPage } from "next";
 const CampaignDetails: NextPage = () => {
   const router = useRouter();
   const query: any = router.query;
-  const { donate, getDonations, contract, address } = useStateContext();
+  const { donate, getDonations, contract, address, createFlow } =
+    useStateContext();
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [donators, setDonators] = useState<
@@ -31,7 +32,7 @@ const CampaignDetails: NextPage = () => {
 
   const handleDonate = async () => {
     setIsLoading(true);
-    await donate(query.pId, amount);
+    await createFlow(query.pId);
     router.push("/Home");
     setIsLoading(false);
   };
@@ -75,7 +76,7 @@ const CampaignDetails: NextPage = () => {
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
-              Creator
+              Recipient
             </h4>
 
             <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
@@ -111,7 +112,7 @@ const CampaignDetails: NextPage = () => {
 
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
-              Donators
+              Supporters
             </h4>
 
             <div className="mt-[20px] flex flex-col gap-4">

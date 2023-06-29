@@ -14,7 +14,7 @@ const CreateCampaign: NextPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
   const [form, setForm] = React.useState({
-    name: "",
+    recipient: "",
     title: "",
     description: "",
     target: "",
@@ -22,7 +22,7 @@ const CreateCampaign: NextPage = () => {
     image: "",
   });
 
-  const { createCampaign } = useStateContext();
+  const { createProject } = useStateContext();
 
   const handleFormFieldChange = (
     fieldName: string,
@@ -37,7 +37,7 @@ const CreateCampaign: NextPage = () => {
     checkIfImage(form.image, async (exists: any) => {
       if (exists) {
         setIsLoading(true);
-        await createCampaign({
+        await createProject({
           ...form,
           target: ethers.utils.parseUnits(form.target, 18),
         });
@@ -65,13 +65,13 @@ const CreateCampaign: NextPage = () => {
         >
           <div className="flex flex-wrap gap-[40px]">
             <FormField
-              labelName="Your Name *"
-              placeholder="John Doe"
+              labelName="Recipient Address *"
+              placeholder="0x123....234"
               inputType="text"
               isTextArea={false}
-              value={form.name}
+              value={form.recipient}
               handleChange={(e: { target: { value: any } }) =>
-                handleFormFieldChange("name", e)
+                handleFormFieldChange("recipient", e)
               }
               handleTextChange={(e: { target: { value: any } }) =>
                 console.log(e.target.value)

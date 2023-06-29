@@ -7,14 +7,16 @@ import Image from "next/image";
 import { CampaignProps } from "../types/type";
 const FundCard = ({
   owner,
+  recipient,
   title,
   description,
   target,
   deadline,
   amountCollected,
+  amountWithdrawn,
   image,
   handleClick,
-}: CampaignProps) => {
+}: any) => {
   const remainingDays = daysLeft(deadline);
 
   return (
@@ -77,7 +79,7 @@ const FundCard = ({
             />
           </div>
           <p className="flex-1 font-epilogue font-normal text-[12px] text-[#808191] truncate">
-            by <span className="text-[#b2b3bd]">{owner}</span>
+            <span className="text-[#b2b3bd]">{owner}</span>
           </p>
         </div>
       </div>
