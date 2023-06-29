@@ -1,15 +1,44 @@
 "use client";
-import type { NextPage } from "next";
-import { Navbar, Sidebar } from "../components";
+import React, { useState, useEffect } from "react";
+import { useStateContext } from "../context";
+import { Layout, DisplayCampaigns } from "../components";
+import { NextPage } from "next";
 
-const Page: NextPage = () => {
+const Home: NextPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [campaigns, setCampaigns] = useState([]);
+  const { address, contract, getCampaigns } = useStateContext();
+  const fetchCampaigns = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getCampaigns();
+      setCampaigns(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("contract call failure", error);
+    }
+  };
+
+  useEffect(() => {
+    if (contract) fetchCampaigns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, contract]);
+
   return (
-    <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row">
-      <div className="flex-1 max-sm:w-full max-w-[1280px] mx-auto sm:pr-5">
-        <Navbar />
-      </div>
-    </div>
+    <Layout>
+      {campaigns && campaigns.length > 0 ? (
+        <DisplayCampaigns
+          title="All Projects"
+          isLoading={isLoading}
+          campaigns={campaigns}
+        />
+      ) : (
+        <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
+          No campaigns to display
+        </p>
+      )}
+    </Layout>
   );
 };
 
-export default Page;
+export default Home;

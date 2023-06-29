@@ -29,7 +29,6 @@ const CreateCampaign: NextPage = () => {
     setForm({ ...form, [fieldName]: e.target.value });
     console.log(e.target.value);
     console.log(form);
-    // console.log("publishproject", publishProject);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -42,7 +41,7 @@ const CreateCampaign: NextPage = () => {
           target: ethers.utils.parseUnits(form.target, 18),
         });
         setIsLoading(false);
-        router.push("/Home");
+        router.push("/");
       } else {
         alert("Provide valid image URL");
         setForm({ ...form, image: "" });

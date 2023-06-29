@@ -33,7 +33,7 @@ const CampaignDetails: NextPage = () => {
   const handleDonate = async () => {
     setIsLoading(true);
     await createFlow(query.pId, amount);
-    router.push("/Home");
+    router.push("/");
     setIsLoading(false);
   };
 

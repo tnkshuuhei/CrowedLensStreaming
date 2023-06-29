@@ -11,7 +11,7 @@ const Navbar = () => {
   const router = useRouter();
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  const { connectWallet, connect, address } = useStateContext();
+  const { connectWallet, address } = useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
