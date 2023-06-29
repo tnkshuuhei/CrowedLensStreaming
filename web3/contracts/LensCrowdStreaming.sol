@@ -39,7 +39,15 @@ contract LensStreaming {
         token.transferFrom(msg.sender, address(this), amount);
     }
 
-		function createProject(address _owner,address _recipient, string memory _title, string memory _description, uint256 _target, uint256 _deadline, string memory _image) public returns (uint256) {
+		function createProject(
+				address _owner,
+				address _recipient, 
+				string memory _title, 
+				string memory _description, 
+				uint256 _target, 
+				uint256 _deadline, 
+				string memory _image) 
+			public returns (uint256) {
         Project storage project = projects[numberOfProjects];
         require(project.deadline < block.timestamp, "The deadline should be a date in the future.");
         project.owner = _owner;
@@ -58,25 +66,27 @@ contract LensStreaming {
         return numberOfProjects - 1;
 		}
 
+
 	  /// @notice Create a stream into the contract.
     /// @dev This requires the contract to be a flowOperator for the msg sender.
     /// @param token Token to stream.
     /// @param flowRate Flow rate per second to stream.
-    function createFlowIntoContract(uint256 _id, ISuperToken token, int96 flowRate) external payable {
+    function createFlowIntoContract(uint256 _id, ISuperToken token, int96 flowRate, uint256 montylyRate) external payable {
         // if (!accountList[msg.sender] && msg.sender != owner) revert Unauthorized();
-        uint256 amount = msg.value;
+
+        uint256 amount = montylyRate;
 
         Project storage project = projects[_id];
 
         project.donators.push(msg.sender);
         project.donations.push(amount);
 
-        (bool sent,) = payable(project.owner).call{value: amount}("");
+        (bool sent) = token.createFlowFrom(msg.sender, address(this), flowRate);
 
         if(sent) {
             project.amountCollected = project.amountCollected + amount;
         }
-        token.createFlowFrom(msg.sender, address(this), flowRate);
+        
     }
     /// @notice Create flow from contract to specified address.
     /// @param token Token to stream.
@@ -88,7 +98,6 @@ contract LensStreaming {
         int96 flowRate
     ) external {
         // if (!accountList[msg.sender] && msg.sender != owner) revert Unauthorized();
-
         token.createFlow(receiver, flowRate);
     }
 		
