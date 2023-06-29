@@ -13,8 +13,7 @@ import { NextPage } from "next";
 const CampaignDetails: NextPage = () => {
   const router = useRouter();
   const query: any = router.query;
-  const { donate, getDonations, contract, address, createFlow } =
-    useStateContext();
+  const { getDonations, contract, address, createFlow } = useStateContext();
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [donators, setDonators] = useState<
@@ -28,7 +27,7 @@ const CampaignDetails: NextPage = () => {
 
   useEffect(() => {
     if (contract) fetchDonators();
-    calculateFlowRate(0.05);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contract, address]);
 
   const handleDonate = async () => {
@@ -37,22 +36,6 @@ const CampaignDetails: NextPage = () => {
     router.push("/Home");
     setIsLoading(false);
   };
-  const [flowRate, setFlowRate] = useState(0);
-  function calculateFlowRate(amountInEther: number) {
-    if (typeof amountInEther !== "number" || isNaN(amountInEther)) {
-      console.log("typeof amountInEther", typeof amountInEther);
-      alert("You can only calculate a flowRate based on a number");
-      return;
-    } else {
-      const monthlyAmount = ethers.utils.parseEther(amountInEther.toString());
-      console.log("monthlyAmount:", monthlyAmount);
-      const calculatedFlowRate = Math.floor(
-        Number(monthlyAmount) / 3600 / 24 / 30
-      );
-      setFlowRate(calculatedFlowRate);
-      console.log("flowrate:", flowRate);
-    }
-  }
 
   return (
     <Layout>

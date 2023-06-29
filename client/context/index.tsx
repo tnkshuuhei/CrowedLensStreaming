@@ -29,6 +29,7 @@ export const StateContextProvider = ({ children }: any) => {
   const connect: any = useMetamask();
   useEffect(() => {
     checkIfWalletIsConnected();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const connectWallet = async () => {

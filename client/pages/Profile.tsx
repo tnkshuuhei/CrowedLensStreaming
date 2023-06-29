@@ -21,6 +21,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (contract) fetchCampaigns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, contract]);
 
   return (
