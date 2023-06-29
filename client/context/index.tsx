@@ -40,7 +40,7 @@ export const StateContextProvider = ({ children }: any) => {
         return;
       }
       const accounts = await window.ethereum.request({
-        method: "eth_accounts",
+        method: "eth_requestAccounts",
       });
 
       setAddress(accounts[0]);
@@ -58,7 +58,9 @@ export const StateContextProvider = ({ children }: any) => {
     } else {
       console.log("We have the ethereum object", ethereum);
     }
-    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
     if (accounts.length !== 0) {
       setAddress(accounts[0]);
       console.log("Found an authorized account:", address);
