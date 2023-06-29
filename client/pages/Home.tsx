@@ -27,7 +27,7 @@ const Home: NextPage = () => {
     <Layout>
       {campaigns && campaigns.length > 0 ? (
         <DisplayCampaigns
-          title="All Campaigns"
+          title="All Projects"
           isLoading={isLoading}
           campaigns={campaigns}
         />

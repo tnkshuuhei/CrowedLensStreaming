@@ -1,17 +1,19 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
 import { Framework } from "@superfluid-finance/sdk-core";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import {
   useAddress,
   useContract,
   useMetamask,
   useContractWrite,
 } from "@thirdweb-dev/react";
+import { calculateFlowRate } from "../utils";
 const ABI =
   require("../../web3/artifacts-zk/contracts/LensCrowdStreaming.sol/LensStreaming.json").abi;
-
+// const contractaddress = "0x525EDDC2aD9C73977C547868e2F1C3Ce64A8Ecd1";
+const contractaddress = "0x27873faEAbe978554f3b86d6fc9C94C68B25CfBE";
 const StateContext = createContext<any>(null);
-const contractaddress = "0x525EDDC2aD9C73977C547868e2F1C3Ce64A8Ecd1";
+
 export const StateContextProvider = ({ children }: any) => {
   const { contract } = useContract(
     // "0xbFb5cEDD9100a242860b10aC5020C02d86e91002"
@@ -21,7 +23,8 @@ export const StateContextProvider = ({ children }: any) => {
     contract,
     "createProject"
   );
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState("");
+  // const address = "";
   // const address: string | undefined = useAddress();
   const connect: any = useMetamask();
   useEffect(() => {
@@ -35,10 +38,12 @@ export const StateContextProvider = ({ children }: any) => {
         alert("Get MetaMask!");
         return;
       }
-      const address = await ethereum.request({
-        method: "eth_requestAccounts",
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
       });
-      console.log("Connected", address[0]);
+
+      setAddress(accounts[0]);
+      console.log("Connected", accounts[0]);
     } catch (error) {
       console.log(error);
     }
@@ -52,23 +57,20 @@ export const StateContextProvider = ({ children }: any) => {
     } else {
       console.log("We have the ethereum object", ethereum);
     }
-
     const accounts = await window.ethereum.request({ method: "eth_accounts" });
     if (accounts.length !== 0) {
-      const address = accounts[0];
+      setAddress(accounts[0]);
       console.log("Found an authorized account:", address);
     } else {
       console.log("No authorized account found");
     }
   };
 
-  const createFlow = async (id: any) => {
+  const createFlow = async (id: any, amount: number) => {
     try {
-      // const provider = new ethers.providers.JsonRpcProvider(
-      //   "https://eth-goerli.g.alchemy.com/v2/3s4QY8XlWxB6Hz1uJTHLSpr6sAaWB5Rc"
-      // );
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []); // <- this promps user to connect metamask
+      //this promps user to connect metamask
+      await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
 
       const sf = await Framework.create({
@@ -76,14 +78,17 @@ export const StateContextProvider = ({ children }: any) => {
         provider,
       });
 
-      // const signers = await provider.getSigner();
-      // console.log(signers);
+      const parsedAmount = Number(amount);
+      console.log("typeof amount", typeof parsedAmount);
+      const rate = calculateFlowRate(parsedAmount);
+      console.log("flowrate", rate);
+      console.log("typeof flowrate", typeof rate);
 
       const lenscontract = new ethers.Contract(contractaddress, ABI, provider);
       console.log(lenscontract);
       const ethx = await sf.loadSuperToken("ETHx");
       console.log(ethx);
-      // 19290123456
+
       const aclApproval = ethx.updateFlowOperatorPermissions({
         flowOperator: lenscontract.address,
         flowRateAllowance: "3858024691358024", //10k tokens per month in flowRateAllowanace
@@ -99,14 +104,14 @@ export const StateContextProvider = ({ children }: any) => {
       //this flow rate is ~0.05 ethx/month
       await lenscontract
         .connect(signer)
-        .createFlowIntoContract(id, ethx.address, "19290123456", {
+        .createFlowIntoContract(id, ethx.address, rate, parsedAmount, {
           gasLimit: 20000000,
         })
         .then(function (tx: any) {
           console.log(`
-					Congrats! You just successfully created a flow into the money router contract. 
-					Tx Hash: ${tx.hash}
-					`);
+						Congrats! You just successfully created a flow into the money router contract.
+						Tx Hash: ${tx.hash}
+						`);
         });
     } catch (error) {
       console.log(error);
@@ -118,17 +123,32 @@ export const StateContextProvider = ({ children }: any) => {
         alert("Please connect your wallet");
         return;
       } else {
-        const data = await createProject({
-          args: [
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []); // <- this promps user to connect metamask
+        const signer = provider.getSigner();
+        const lenscontract = new ethers.Contract(
+          contractaddress,
+          ABI,
+          provider
+        );
+        console.log(lenscontract);
+        const data = await lenscontract
+          .connect(signer)
+          .createProject(
             address,
             form.recipient,
             form.title,
             form.description,
             form.target,
             new Date(form.deadline).getTime(),
-            form.image,
-          ],
-        });
+            form.image
+          )
+          .then(function (tx: any) {
+            console.log(`
+						Congrats! You just successfully created a flow into the money router contract.
+						Tx Hash: ${tx.hash}
+						`);
+          });
         console.log("contract call success", data);
       }
     } catch (error) {
@@ -145,9 +165,7 @@ export const StateContextProvider = ({ children }: any) => {
         description: project.description,
         target: ethers.utils.formatEther(project.target.toString()),
         deadline: project.deadline.toNumber(),
-        amountCollected: ethers.utils.formatEther(
-          project.amountCollected.toString()
-        ),
+        amountCollected: project.amountCollected.toString(),
         amountWithdrawn: ethers.utils.formatEther(
           project.amountWithdrawn.toString()
         ),
@@ -183,16 +201,17 @@ export const StateContextProvider = ({ children }: any) => {
   const getDonations = async (pId: any) => {
     const donations = await contract?.call("getDonators", pId);
     const numberOfDonations = donations[0].length;
-
+    console.log("donations", donations);
     const parsedDonations = [];
 
     for (let i = 0; i < numberOfDonations; i++) {
       parsedDonations.push({
         donator: donations[0][i],
-        donation: ethers.utils.formatEther(donations[1][i].toString()),
+        // donation: ethers.utils.formatEther(donations[1][i].toString()),
+        donation: donations[1][i].toString(),
       });
     }
-
+    console.log("parsedDonations", parsedDonations);
     return parsedDonations;
   };
 
@@ -208,7 +227,7 @@ export const StateContextProvider = ({ children }: any) => {
         getDonations,
         getCampaigns,
         getUserCampaigns,
-        createProject: publishProject,
+        publishProject,
       }}
     >
       {children}

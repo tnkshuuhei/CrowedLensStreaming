@@ -28,14 +28,31 @@ const CampaignDetails: NextPage = () => {
 
   useEffect(() => {
     if (contract) fetchDonators();
+    calculateFlowRate(0.05);
   }, [contract, address]);
 
   const handleDonate = async () => {
     setIsLoading(true);
-    await createFlow(query.pId);
+    await createFlow(query.pId, amount);
     router.push("/Home");
     setIsLoading(false);
   };
+  const [flowRate, setFlowRate] = useState(0);
+  function calculateFlowRate(amountInEther: number) {
+    if (typeof amountInEther !== "number" || isNaN(amountInEther)) {
+      console.log("typeof amountInEther", typeof amountInEther);
+      alert("You can only calculate a flowRate based on a number");
+      return;
+    } else {
+      const monthlyAmount = ethers.utils.parseEther(amountInEther.toString());
+      console.log("monthlyAmount:", monthlyAmount);
+      const calculatedFlowRate = Math.floor(
+        Number(monthlyAmount) / 3600 / 24 / 30
+      );
+      setFlowRate(calculatedFlowRate);
+      console.log("flowrate:", flowRate);
+    }
+  }
 
   return (
     <Layout>
@@ -91,13 +108,9 @@ const CampaignDetails: NextPage = () => {
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">
                   {query.owner}
                 </h4>
-                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
-                  10 Campaigns
-                </p>
               </div>
             </div>
           </div>
-
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
               Story
@@ -126,7 +139,7 @@ const CampaignDetails: NextPage = () => {
                       {index + 1}. {item.donator}
                     </p>
                     <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">
-                      {item.donation}
+                      {item.donation} ETH / month
                     </p>
                   </div>
                 ))
@@ -141,12 +154,12 @@ const CampaignDetails: NextPage = () => {
 
         <div className="flex-1">
           <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
-            Fund
+            Support
           </h4>
 
           <div className="mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
-              Fund the campaign
+              Start Streaming
             </p>
             <div className="mt-[30px]">
               <input

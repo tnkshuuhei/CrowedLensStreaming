@@ -26,7 +26,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <DisplayCampaigns
-        title="All Campaigns"
+        title="All Projects"
         isLoading={isLoading}
         campaigns={campaigns}
       />

@@ -21,15 +21,15 @@ const CreateCampaign: NextPage = () => {
     deadline: "",
     image: "",
   });
-
-  const { createProject } = useStateContext();
-
+  const { publishProject } = useStateContext();
   const handleFormFieldChange = (
     fieldName: string,
     e: { target: { value: any } }
   ) => {
     setForm({ ...form, [fieldName]: e.target.value });
     console.log(e.target.value);
+    console.log(form);
+    // console.log("publishproject", publishProject);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -37,12 +37,12 @@ const CreateCampaign: NextPage = () => {
     checkIfImage(form.image, async (exists: any) => {
       if (exists) {
         setIsLoading(true);
-        await createProject({
+        await publishProject({
           ...form,
           target: ethers.utils.parseUnits(form.target, 18),
         });
         setIsLoading(false);
-        router.push("/");
+        router.push("/Home");
       } else {
         alert("Provide valid image URL");
         setForm({ ...form, image: "" });
