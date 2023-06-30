@@ -1,10 +1,9 @@
 import React from "react";
 
-import { tagType, thirdweb } from "../assets";
+import { lens } from "../assets";
 import { daysLeft } from "../utils";
 import Image from "next/image";
 
-import { CampaignProps } from "../types/type";
 const FundCard = ({
   owner,
   recipient,
@@ -24,24 +23,13 @@ const FundCard = ({
       className="sm:w-[288px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer"
       onClick={handleClick}
     >
-      <Image
-        src={thirdweb}
+      <img
+        src={image || lens}
         alt="fund"
         className="w-full h-[158px] object-cover rounded-[15px]"
       />
 
       <div className="flex flex-col p-4">
-        <div className="flex flex-row items-center mb-[18px]">
-          <Image
-            src={tagType}
-            alt="tag"
-            className="w-[17px] h-[17px] object-contain"
-          />
-          <p className="ml-[12px] mt-[2px] font-epilogue font-medium text-[12px] text-[#808191]">
-            Education
-          </p>
-        </div>
-
         <div className="block">
           <h3 className="font-epilogue font-semibold text-[16px] text-white text-left leading-[26px] truncate">
             {title}
@@ -73,13 +61,13 @@ const FundCard = ({
         <div className="flex items-center mt-[20px] gap-[12px]">
           <div className="w-[30px] h-[30px] rounded-full flex justify-center items-center bg-[#13131a]">
             <Image
-              src={thirdweb}
+              src={lens}
               alt="user"
               className="w-1/2 h-1/2 object-contain"
             />
           </div>
           <p className="flex-1 font-epilogue font-normal text-[12px] text-[#808191] truncate">
-            <span className="text-[#b2b3bd]">{owner}</span>
+            <span className="text-[#b2b3bd]">{recipient}</span>
           </p>
         </div>
       </div>

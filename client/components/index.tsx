@@ -1,4 +1,5 @@
 export { default as Navbar } from "./Navbar";
+export { default as Sidebar } from "./SideBar";
 export { default as CustomButton } from "./CustomButton";
 export { default as FormField } from "./FormField";
 export { default as DisplayCampaigns } from "./DisplayCampaigns";

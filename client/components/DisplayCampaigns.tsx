@@ -8,7 +8,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }: any) => {
   const router = useRouter();
   const handleRoute = (campaign: any) => {
     router.push({
-      pathname: `/${campaign.owner}`,
+      pathname: `/${campaign.recipient}`,
       query: campaign,
     });
   };
@@ -30,7 +30,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }: any) => {
 
         {!isLoading && campaigns.length === 0 && (
           <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
-            You have not created any campigns yet
+            You have not created any Project yet
           </p>
         )}
 

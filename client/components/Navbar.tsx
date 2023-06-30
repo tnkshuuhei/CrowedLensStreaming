@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CustomButton from "./CustomButton";
-import { logo, menu, search, thirdweb } from "../assets";
+import { logo, menu, search, thirdweb, lens } from "../assets";
 import { navlinks } from "../constants";
 import { useRouter } from "next/router";
 import { useStateContext } from "../context";
@@ -81,8 +81,8 @@ const Navbar: NextPage = () => {
           />
         </div>
         <div className="rounded-xl z-10">
-          <div className="max-w-[458px] absolute top-[80px] left-[175px] right-0  bg-[#1c1c24] z-10 shadow-secondary ">
-            <ul className="">
+          <div className="max-w-[458px] absolute top-[80px] left-[175px] right-0  bg-[#1c1c24] z-10 shadow-secondary rounded-lg">
+            <ul>
               {profiles.map((profile) => (
                 <li
                   key={profile.handle}
@@ -127,7 +127,7 @@ const Navbar: NextPage = () => {
         <Link href="/Profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <Image
-              src={thirdweb}
+              src={lens}
               alt="user"
               className="w-[60%] h-[60%] object-contain"
             />

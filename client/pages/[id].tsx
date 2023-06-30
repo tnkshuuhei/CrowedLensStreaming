@@ -1,13 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { ethers } from "ethers";
+
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useStateContext } from "../context";
 import { CountBox, CustomButton, Layout, Loader } from "../components";
 import { calculateBarPercentage, daysLeft } from "../utils";
-import { thirdweb } from "../assets";
+import { lens } from "../assets";
 import { NextPage } from "next";
 
 const CampaignDetails: NextPage = () => {
@@ -42,9 +41,8 @@ const CampaignDetails: NextPage = () => {
       {isLoading && <Loader />}
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
-          <Image
-            // src={state.image}
-            src={thirdweb}
+          <img
+            src={query.image || lens}
             alt="campaign"
             className="w-full h-[410px] object-cover rounded-xl"
           />
@@ -78,18 +76,17 @@ const CampaignDetails: NextPage = () => {
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
               Recipient
             </h4>
-
             <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
               <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer">
                 <Image
-                  src={thirdweb}
+                  src={lens}
                   alt="user"
                   className="w-[60%] h-[60%] object-contain"
                 />
               </div>
               <div>
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">
-                  {query.owner}
+                  {query.recipient}
                 </h4>
               </div>
             </div>
@@ -137,7 +134,7 @@ const CampaignDetails: NextPage = () => {
 
         <div className="flex-1">
           <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
-            Support
+            Stream / Withdraw Funds
           </h4>
 
           <div className="mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
@@ -163,13 +160,21 @@ const CampaignDetails: NextPage = () => {
                   you.
                 </p>
               </div>
-
-              <CustomButton
-                btnType="button"
-                title="Fund Campaign"
-                styles="w-full bg-[#8c6dfd]"
-                handleClick={handleDonate}
-              />
+              {query.recipient === address ? (
+                <CustomButton
+                  btnType="button"
+                  title="Withdraw Funds"
+                  styles="w-full bg-[#8c6dfd]"
+                  handleClick={handleDonate}
+                />
+              ) : (
+                <CustomButton
+                  btnType="button"
+                  title="Fund Campaign"
+                  styles="w-full bg-[#8c6dfd]"
+                  handleClick={handleDonate}
+                />
+              )}
             </div>
           </div>
         </div>
