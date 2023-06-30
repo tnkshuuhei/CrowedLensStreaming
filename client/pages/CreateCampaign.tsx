@@ -12,9 +12,11 @@ import { NextPage } from "next";
 
 const CreateCampaign: NextPage = () => {
   const router = useRouter();
+  const query = router.query.address;
+  console.log(query);
   const [isLoading, setIsLoading] = React.useState(false);
   const [form, setForm] = React.useState({
-    recipient: "",
+    recipient: query,
     title: "",
     description: "",
     target: "",
@@ -65,9 +67,10 @@ const CreateCampaign: NextPage = () => {
           <div className="flex flex-wrap gap-[40px]">
             <FormField
               labelName="Recipient Address *"
-              placeholder="0x123....234"
+              placeholder={query}
               inputType="text"
               isTextArea={false}
+              isDiabled={true}
               value={form.recipient}
               handleChange={(e: { target: { value: any } }) =>
                 handleFormFieldChange("recipient", e)

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useContext, createContext, useEffect } from "react";
 import { Framework } from "@superfluid-finance/sdk-core";
 import { BigNumber, ethers } from "ethers";
@@ -15,14 +16,7 @@ const contractaddress = "0x27873faEAbe978554f3b86d6fc9C94C68B25CfBE";
 const StateContext = createContext<any>(null);
 
 export const StateContextProvider = ({ children }: any) => {
-  const { contract } = useContract(
-    // "0xbFb5cEDD9100a242860b10aC5020C02d86e91002"
-    contractaddress
-  );
-  const { mutateAsync: createProject } = useContractWrite(
-    contract,
-    "createProject"
-  );
+  const { contract } = useContract(contractaddress);
   const [address, setAddress] = useState("");
   // const address = "";
   // const address: string | undefined = useAddress();
@@ -50,22 +44,25 @@ export const StateContextProvider = ({ children }: any) => {
     }
   };
   const checkIfWalletIsConnected = async () => {
-    const { ethereum } = window;
-
-    if (!ethereum) {
-      console.log("Make sure you have metamask!");
-      return;
-    } else {
-      console.log("We have the ethereum object", ethereum);
-    }
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    if (accounts.length !== 0) {
-      setAddress(accounts[0]);
-      console.log("Found an authorized account:", address);
-    } else {
-      console.log("No authorized account found");
+    try {
+      const { ethereum } = window;
+      if (!ethereum) {
+        console.log("Make sure you have metamask!");
+        return;
+      } else {
+        console.log("We have the ethereum object", ethereum);
+      }
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      if (accounts.length !== 0) {
+        setAddress(accounts[0]);
+        console.log("Found an authorized account:", address);
+      } else {
+        console.log("No authorized account found");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

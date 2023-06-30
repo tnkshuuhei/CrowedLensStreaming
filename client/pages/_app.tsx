@@ -2,19 +2,29 @@ import type { AppProps } from "next/app";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import { StateContextProvider } from "../context";
-// This is the chain your dApp will work on.
-// Change this to the chain your app is built for.
-// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-// const activeChain = "ethereum";
+
+// import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { mainnet, polygon } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
+import { LensProvider, LensConfig, production } from "@lens-protocol/react-web";
+import { bindings as wagmiBindings } from "@lens-protocol/wagmi";
+
+const lensConfig: LensConfig = {
+  bindings: wagmiBindings(),
+  environment: production,
+};
+
 const activeChain = "goerli";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider activeChain={activeChain}>
-      <StateContextProvider>
-        <Component {...pageProps} />
-      </StateContextProvider>
-    </ThirdwebProvider>
+    <LensProvider config={lensConfig}>
+      <ThirdwebProvider activeChain={activeChain}>
+        <StateContextProvider>
+          <Component {...pageProps} />
+        </StateContextProvider>
+      </ThirdwebProvider>
+    </LensProvider>
   );
 }
 

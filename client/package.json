@@ -11,6 +11,9 @@
     "deploy": "next build && next export && npx thirdweb@latest upload out"
   },
   "dependencies": {
+    "@lens-protocol/client": "^1.2.0",
+    "@lens-protocol/react-web": "^1.2.1",
+    "@lens-protocol/wagmi": "^2.0.1",
     "@superfluid-finance/sdk-core": "^0.6.6",
     "@thirdweb-dev/react": "^3",
     "@thirdweb-dev/sdk": "^3",
@@ -20,7 +23,8 @@
     "react": "^18.2",
     "react-dom": "^18.2",
     "react-router-dom": "^6.14.0",
-    "sharp": "^0.32.1"
+    "sharp": "^0.32.1",
+    "wagmi": "^1.3.3"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",
