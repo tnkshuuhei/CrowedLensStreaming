@@ -60,9 +60,6 @@ contract LensStreaming {
 				project.amountWithdrawn = 0;
         project.image = _image;
         numberOfProjects++;
-				project.owner = _recipient; //change project owner to recipient address
-				// if (project.recipient != owner) revert Unauthorized(
-				// );
         return numberOfProjects - 1;
 		}
 
@@ -72,17 +69,11 @@ contract LensStreaming {
     /// @param token Token to stream.
     /// @param flowRate Flow rate per second to stream.
     function createFlowIntoContract(uint256 _id, ISuperToken token, int96 flowRate, uint256 montylyRate) external payable {
-        // if (!accountList[msg.sender] && msg.sender != owner) revert Unauthorized();
-
         uint256 amount = montylyRate;
-
         Project storage project = projects[_id];
-
         project.donators.push(msg.sender);
         project.donations.push(amount);
-
         (bool sent) = token.createFlowFrom(msg.sender, address(this), flowRate);
-
         if(sent) {
             project.amountCollected = project.amountCollected + amount;
         }
@@ -93,11 +84,13 @@ contract LensStreaming {
     /// @param receiver Receiver of stream.
     /// @param flowRate Flow rate per second to stream.
     function createFlowFromContract(
+				uint256 _id,
         ISuperToken token,
         address receiver,
         int96 flowRate
     ) external {
-        // if (!accountList[msg.sender] && msg.sender != owner) revert Unauthorized();
+			require(msg.sender == projects[_id].recipient, "Only the recipient can withdraw funds");
+				if (msg.sender != projects[_id].recipient) revert Unauthorized();
         token.createFlow(receiver, flowRate);
     }
 		
@@ -113,7 +106,7 @@ contract LensStreaming {
     /// @param _id  Id of the project.
     /// @param amount Amount to withdraw.
 		function withdrawFunds(uint256 _id, uint256 amount) external {
-				require(msg.sender == projects[_id].owner, "Only the owner can withdraw funds");
+				require(msg.sender == projects[_id].recipient, "Only the recipient can withdraw funds");
 				if (msg.sender != projects[_id].recipient) revert Unauthorized();
 				require(amount <= projects[_id].amountCollected - projects[_id].amountWithdrawn, "Insufficient balance");
 
