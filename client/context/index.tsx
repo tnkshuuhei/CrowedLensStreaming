@@ -18,7 +18,6 @@ export const StateContextProvider = ({ children }: any) => {
     checkIfWalletIsConnected();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
@@ -58,7 +57,6 @@ export const StateContextProvider = ({ children }: any) => {
       console.log(error);
     }
   };
-
   const createFlow = async (id: any, amount: number) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -93,7 +91,6 @@ export const StateContextProvider = ({ children }: any) => {
     `);
       });
       //call money router create flow into contract method from signers[0]
-      //this flow rate is ~0.05 ethx/month
       await lenscontract
         .connect(signer)
         .createFlowIntoContract(id, xToken.address, rate, parsedAmount, {
@@ -109,6 +106,38 @@ export const StateContextProvider = ({ children }: any) => {
       console.log(error);
     }
   };
+  const withdraw = async (id: any, recipient: string, amount: number) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      //this promps user to connect metamask
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+
+      const sf = await Framework.create({
+        chainId: (await provider.getNetwork()).chainId,
+        provider,
+      });
+
+      const parsedAmount = Number(amount);
+      const rate = calculateFlowRate(parsedAmount);
+      const lenscontract = new ethers.Contract(contractaddress, ABI, provider);
+      const xToken = await sf.loadSuperToken("fDAIx");
+      await lenscontract
+        .connect(signer)
+        .createFlowFromContract(id, xToken.address, recipient, rate, {
+          gasLimit: 20000000,
+        })
+        .then(function (tx: any) {
+          console.log(`
+						Congrats! You just successfully created a flow from the money router contract.
+						Tx Hash: ${tx.hash}
+						`);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const publishProject = async (form: any) => {
     try {
       if (!address) {
@@ -171,7 +200,6 @@ export const StateContextProvider = ({ children }: any) => {
       console.log("contract is not defined");
     }
   };
-
   const getUserCampaigns = async () => {
     const allCampaigns = await getCampaigns();
     console.log("allCampaigns", allCampaigns);
@@ -190,7 +218,6 @@ export const StateContextProvider = ({ children }: any) => {
     console.log("filteredCampaigns", filteredCampaigns);
     return filteredCampaigns;
   };
-
   const donate = async (pId: any, amount: any) => {
     try {
       const data = await contract?.call("donateToCampaign", pId, {
@@ -217,7 +244,6 @@ export const StateContextProvider = ({ children }: any) => {
     console.log("parsedDonations", parsedDonations);
     return parsedDonations;
   };
-
   return (
     <StateContext.Provider
       value={{
@@ -227,6 +253,7 @@ export const StateContextProvider = ({ children }: any) => {
         connectWallet,
         createFlow,
         donate,
+        withdraw,
         getDonations,
         getCampaigns,
         getCreatedCampaign,

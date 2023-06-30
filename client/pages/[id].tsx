@@ -12,7 +12,8 @@ import { NextPage } from "next";
 const CampaignDetails: NextPage = () => {
   const router = useRouter();
   const query: any = router.query;
-  const { getDonations, contract, address, createFlow } = useStateContext();
+  const { getDonations, contract, address, createFlow, withdraw } =
+    useStateContext();
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [donators, setDonators] = useState<
@@ -29,6 +30,12 @@ const CampaignDetails: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contract, address]);
 
+  const handlewithdraw = async () => {
+    setIsLoading(true);
+    await withdraw(query.pId, query.recipient, amount);
+    router.push("/Profile");
+    setIsLoading(false);
+  };
   const handleDonate = async () => {
     setIsLoading(true);
     await createFlow(query.pId, amount);
@@ -165,7 +172,7 @@ const CampaignDetails: NextPage = () => {
                   btnType="button"
                   title="Withdraw Funds"
                   styles="w-full bg-[#8c6dfd]"
-                  handleClick={handleDonate}
+                  handleClick={handlewithdraw}
                 />
               ) : (
                 <CustomButton
