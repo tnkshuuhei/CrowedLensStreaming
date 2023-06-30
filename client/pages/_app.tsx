@@ -4,7 +4,9 @@ import "../styles/globals.css";
 import { StateContextProvider } from "../context";
 import { LensProvider, LensConfig, production } from "@lens-protocol/react-web";
 import { bindings as wagmiBindings } from "@lens-protocol/wagmi";
+import { disableFragmentWarnings } from "graphql-tag";
 
+disableFragmentWarnings();
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: production,
