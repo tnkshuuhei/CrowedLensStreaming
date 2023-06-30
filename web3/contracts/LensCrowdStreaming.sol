@@ -35,7 +35,6 @@ contract LensStreaming {
     /// @param token Super Token to transfer.
     /// @param amount Amount to transfer.
     function sendLumpSumToContract(ISuperToken token, uint256 amount) external {
-        // if (!accountList[msg.sender] && msg.sender != project.owner) revert Unauthorized();
         token.transferFrom(msg.sender, address(this), amount);
     }
 
@@ -122,8 +121,6 @@ contract LensStreaming {
         address receiver,
         int96 flowRate
     ) external {
-        // if (!accountList[msg.sender] && msg.sender != owner) revert Unauthorized();
-
         token.updateFlow(receiver, flowRate);
     }
     /// @notice Delete flow from contract to specified address.
