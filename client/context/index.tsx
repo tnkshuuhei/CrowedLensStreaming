@@ -117,6 +117,18 @@ export const StateContextProvider = ({ children }: any) => {
       const rate = calculateFlowRate(parsedAmount);
       const lenscontract = new ethers.Contract(contractaddress, ABI, provider);
       const xToken = await sf.loadSuperToken("fDAIx");
+      const aclApproval = xToken.updateFlowOperatorPermissions({
+        flowOperator: lenscontract.address,
+        flowRateAllowance: "3858024691358024", //10k tokens per month in flowRateAllowanace
+        permissions: 7, //NOTE: this allows for full create, update, and delete permissions. Change this if you want more granular permissioning
+      });
+      await aclApproval.exec(signer).then(function (tx) {
+        console.log(`
+        Congrats! You've just successfully made the money router contract a flow operator. 
+        Tx Hash: ${tx.hash}
+    `);
+      });
+
       await lenscontract
         .connect(signer)
         .createFlowFromContract(id, xToken.address, recipient, rate, {
