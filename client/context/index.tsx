@@ -6,7 +6,8 @@ import { useContract, useMetamask } from "@thirdweb-dev/react";
 import { calculateFlowRate } from "../utils";
 const ABI =
   require("../../web3/artifacts-zk/contracts/LensCrowdStreaming.sol/LensStreaming.json").abi;
-const contractaddress = "0x27873faEAbe978554f3b86d6fc9C94C68B25CfBE";
+const contractaddress = "0x3950A41e61c30cE767f9D4fe37234D5D7f62A9d2"; // mumbai
+// const contractaddress = "0x27873faEAbe978554f3b86d6fc9C94C68B25CfBE"; // goerli
 const StateContext = createContext<any>(null);
 
 export const StateContextProvider = ({ children }: any) => {
@@ -78,8 +79,8 @@ export const StateContextProvider = ({ children }: any) => {
 
       const lenscontract = new ethers.Contract(contractaddress, ABI, provider);
       console.log(lenscontract);
-      const xToken = await sf.loadSuperToken("Daix");
-
+      const xToken = await sf.loadSuperToken("fDAIx");
+      console.log("xToken", xToken);
       const aclApproval = xToken.updateFlowOperatorPermissions({
         flowOperator: lenscontract.address,
         flowRateAllowance: "3858024691358024", //10k tokens per month in flowRateAllowanace

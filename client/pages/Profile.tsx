@@ -34,12 +34,12 @@ const Home: NextPage = () => {
       {campaigns || created ? (
         <div>
           <DisplayCampaigns
-            title="You Recieve"
+            title="You'll recieve"
             isLoading={isLoading}
             campaigns={campaigns}
           />
           <DisplayCampaigns
-            title="You Created"
+            title="You created"
             isLoading={isLoading}
             campaigns={created}
           />

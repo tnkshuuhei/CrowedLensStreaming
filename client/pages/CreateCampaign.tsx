@@ -104,7 +104,7 @@ const CreateCampaign: NextPage = () => {
           <div className="flex flex-wrap gap-[40px]">
             <FormField
               labelName="Goal *"
-              placeholder="ETH 0.50"
+              placeholder="1,000 DAIx"
               inputType="text"
               isTextArea={false}
               value={form.target}

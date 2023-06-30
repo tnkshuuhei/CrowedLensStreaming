@@ -12,7 +12,8 @@ const lensConfig: LensConfig = {
   environment: production,
 };
 
-const activeChain = "goerli";
+const activeChain = "mumbai";
+// const activeChain = "goerli";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
