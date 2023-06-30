@@ -35,9 +35,6 @@ const Navbar: NextPage = () => {
     setSearchValue(e.target.value);
     handleSearch(e.target.value);
   };
-  useEffect(() => {
-    console.log("profiles: ", profiles);
-  }, [query, profiles]);
 
   const handleSearch = async (value: string) => {
     try {
@@ -60,7 +57,6 @@ const Navbar: NextPage = () => {
   };
 
   const handlechange = (profile: any) => {
-    console.log("profile: ", profile);
     router.push(`/CreateCampaign?address=${profile.address}`);
   };
   return (

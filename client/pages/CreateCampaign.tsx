@@ -13,7 +13,6 @@ import { NextPage } from "next";
 const CreateCampaign: NextPage = () => {
   const router = useRouter();
   const query = router.query.address;
-  console.log(query);
   const [isLoading, setIsLoading] = React.useState(false);
   const [form, setForm] = React.useState({
     recipient: query,
@@ -29,8 +28,6 @@ const CreateCampaign: NextPage = () => {
     e: { target: { value: any } }
   ) => {
     setForm({ ...form, [fieldName]: e.target.value });
-    console.log(e.target.value);
-    console.log(form);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {

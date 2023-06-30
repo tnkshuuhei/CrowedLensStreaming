@@ -69,15 +69,11 @@ export const StateContextProvider = ({ children }: any) => {
       });
 
       const parsedAmount = Number(amount);
-      console.log("typeof amount", typeof parsedAmount);
-      const rate = calculateFlowRate(parsedAmount);
-      console.log("flowrate", rate);
-      console.log("typeof flowrate", typeof rate);
 
+      const rate = calculateFlowRate(parsedAmount);
+      console.log("flowrate: ", rate);
       const lenscontract = new ethers.Contract(contractaddress, ABI, provider);
-      console.log(lenscontract);
       const xToken = await sf.loadSuperToken("fDAIx");
-      console.log("xToken", xToken);
       const aclApproval = xToken.updateFlowOperatorPermissions({
         flowOperator: lenscontract.address,
         flowRateAllowance: "3858024691358024", //10k tokens per month in flowRateAllowanace
@@ -151,7 +147,7 @@ export const StateContextProvider = ({ children }: any) => {
           ABI,
           provider
         );
-        console.log(lenscontract);
+
         const data = await lenscontract
           .connect(signer)
           .createProject(
@@ -165,11 +161,10 @@ export const StateContextProvider = ({ children }: any) => {
           )
           .then(function (tx: any) {
             console.log(`
-						Congrats! You just successfully created a flow into the money router contract.
+						Congrats! You just successfully created a new project!.
 						Tx Hash: ${tx.hash}
 						`);
           });
-        console.log("contract call success", data);
       }
     } catch (error) {
       console.log("contract call failure", error);
@@ -193,7 +188,6 @@ export const StateContextProvider = ({ children }: any) => {
         pId: i,
       }));
 
-      console.log(parsedProjects);
       return parsedProjects;
     } else {
       console.log("contract is not defined");
@@ -201,20 +195,17 @@ export const StateContextProvider = ({ children }: any) => {
   };
   const getUserCampaigns = async () => {
     const allCampaigns = await getCampaigns();
-    console.log("allCampaigns", allCampaigns);
+
     const filteredCampaigns = allCampaigns.filter(
       (project: any) => project.recipient === address
     );
-    console.log("filteredCampaigns", filteredCampaigns);
     return filteredCampaigns;
   };
   const getCreatedCampaign = async () => {
     const allCampaigns = await getCampaigns();
-    console.log("allCampaigns", allCampaigns);
     const filteredCampaigns = allCampaigns.filter(
       (project: any) => project.owner === address
     );
-    console.log("filteredCampaigns", filteredCampaigns);
     return filteredCampaigns;
   };
   const donate = async (pId: any, amount: any) => {
@@ -222,7 +213,6 @@ export const StateContextProvider = ({ children }: any) => {
       const data = await contract?.call("donateToCampaign", pId, {
         value: ethers.utils.parseEther(amount),
       });
-      console.log("data", data);
       return data;
     } catch (error) {
       console.log("contract call failure", error);
@@ -231,16 +221,13 @@ export const StateContextProvider = ({ children }: any) => {
   const getDonations = async (pId: any) => {
     const donations = await contract?.call("getDonators", pId);
     const numberOfDonations = donations[0].length;
-    console.log("donations", donations);
     const parsedDonations = [];
     for (let i = 0; i < numberOfDonations; i++) {
       parsedDonations.push({
         donator: donations[0][i],
-        // donation: ethers.utils.formatEther(donations[1][i].toString()),
         donation: donations[1][i].toString(),
       });
     }
-    console.log("parsedDonations", parsedDonations);
     return parsedDonations;
   };
   return (
