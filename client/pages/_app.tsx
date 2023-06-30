@@ -2,10 +2,6 @@ import type { AppProps } from "next/app";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import { StateContextProvider } from "../context";
-
-// import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet, polygon } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
 import { LensProvider, LensConfig, production } from "@lens-protocol/react-web";
 import { bindings as wagmiBindings } from "@lens-protocol/wagmi";
 

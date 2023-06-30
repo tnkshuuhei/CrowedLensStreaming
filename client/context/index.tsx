@@ -1,25 +1,17 @@
 "use client";
 import React, { useState, useContext, createContext, useEffect } from "react";
 import { Framework } from "@superfluid-finance/sdk-core";
-import { BigNumber, ethers } from "ethers";
-import {
-  useAddress,
-  useContract,
-  useMetamask,
-  useContractWrite,
-} from "@thirdweb-dev/react";
+import { ethers } from "ethers";
+import { useContract, useMetamask } from "@thirdweb-dev/react";
 import { calculateFlowRate } from "../utils";
 const ABI =
   require("../../web3/artifacts-zk/contracts/LensCrowdStreaming.sol/LensStreaming.json").abi;
-// const contractaddress = "0x525EDDC2aD9C73977C547868e2F1C3Ce64A8Ecd1";
 const contractaddress = "0x27873faEAbe978554f3b86d6fc9C94C68B25CfBE";
 const StateContext = createContext<any>(null);
 
 export const StateContextProvider = ({ children }: any) => {
   const { contract } = useContract(contractaddress);
   const [address, setAddress] = useState("");
-  // const address = "";
-  // const address: string | undefined = useAddress();
   const connect: any = useMetamask();
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -86,10 +78,9 @@ export const StateContextProvider = ({ children }: any) => {
 
       const lenscontract = new ethers.Contract(contractaddress, ABI, provider);
       console.log(lenscontract);
-      const ethx = await sf.loadSuperToken("ETHx");
-      console.log(ethx);
+      const xToken = await sf.loadSuperToken("Daix");
 
-      const aclApproval = ethx.updateFlowOperatorPermissions({
+      const aclApproval = xToken.updateFlowOperatorPermissions({
         flowOperator: lenscontract.address,
         flowRateAllowance: "3858024691358024", //10k tokens per month in flowRateAllowanace
         permissions: 7, //NOTE: this allows for full create, update, and delete permissions. Change this if you want more granular permissioning
@@ -104,7 +95,7 @@ export const StateContextProvider = ({ children }: any) => {
       //this flow rate is ~0.05 ethx/month
       await lenscontract
         .connect(signer)
-        .createFlowIntoContract(id, ethx.address, rate, parsedAmount, {
+        .createFlowIntoContract(id, xToken.address, rate, parsedAmount, {
           gasLimit: 20000000,
         })
         .then(function (tx: any) {
@@ -159,8 +150,8 @@ export const StateContextProvider = ({ children }: any) => {
     if (contract) {
       const projects = await contract.call("getProjects");
       const parsedProjects = projects.map((project: any, i: number) => ({
-        owner: project.owner,
-        recipient: project.recipient,
+        owner: project.owner.toLowerCase(),
+        recipient: project.recipient.toLowerCase(),
         title: project.title,
         description: project.description,
         target: ethers.utils.formatEther(project.target.toString()),
@@ -172,6 +163,7 @@ export const StateContextProvider = ({ children }: any) => {
         image: project.image,
         pId: i,
       }));
+
       console.log(parsedProjects);
       return parsedProjects;
     } else {
@@ -181,9 +173,20 @@ export const StateContextProvider = ({ children }: any) => {
 
   const getUserCampaigns = async () => {
     const allCampaigns = await getCampaigns();
+    console.log("allCampaigns", allCampaigns);
     const filteredCampaigns = allCampaigns.filter(
-      (campaign: any) => campaign.owner === address
+      (project: any) => project.recipient === address
     );
+    console.log("filteredCampaigns", filteredCampaigns);
+    return filteredCampaigns;
+  };
+  const getCreatedCampaign = async () => {
+    const allCampaigns = await getCampaigns();
+    console.log("allCampaigns", allCampaigns);
+    const filteredCampaigns = allCampaigns.filter(
+      (project: any) => project.owner === address
+    );
+    console.log("filteredCampaigns", filteredCampaigns);
     return filteredCampaigns;
   };
 
@@ -203,7 +206,6 @@ export const StateContextProvider = ({ children }: any) => {
     const numberOfDonations = donations[0].length;
     console.log("donations", donations);
     const parsedDonations = [];
-
     for (let i = 0; i < numberOfDonations; i++) {
       parsedDonations.push({
         donator: donations[0][i],
@@ -226,6 +228,7 @@ export const StateContextProvider = ({ children }: any) => {
         donate,
         getDonations,
         getCampaigns,
+        getCreatedCampaign,
         getUserCampaigns,
         publishProject,
       }}

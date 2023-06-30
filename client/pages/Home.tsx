@@ -34,7 +34,7 @@ const Home: NextPage = () => {
         />
       ) : (
         <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
-          No campaigns to display
+          No Projects to display
         </p>
       )}
     </Layout>
