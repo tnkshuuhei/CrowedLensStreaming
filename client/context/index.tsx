@@ -4,8 +4,7 @@ import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import { useContract, useMetamask } from "@thirdweb-dev/react";
 import { calculateFlowRate } from "../utils";
-const ABI =
-  require("../../web3/artifacts-zk/contracts/LensCrowdStreaming.sol/LensStreaming.json").abi;
+const ABI = require("../utils/LensStreaming.json").abi;
 const contractaddress = "0x3950A41e61c30cE767f9D4fe37234D5D7f62A9d2"; // mumbai
 // const contractaddress = "0x27873faEAbe978554f3b86d6fc9C94C68B25CfBE"; // goerli
 const StateContext = createContext<any>(null);
